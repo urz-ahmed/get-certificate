@@ -4,6 +4,7 @@ import PDFFile from './PDFFile/PDFFile';
 import { pdf } from '@react-pdf/renderer';
 import { getDoc, doc } from 'firebase/firestore';
 import db from '../server/firebase/firebase'; 
+
 function App() {
   const [docId, setDocId] = useState("");
   const [name, setName] = useState("");
@@ -18,7 +19,9 @@ function App() {
       if (docSnap.exists()) {
         const data = docSnap.data();
         setName(data.name);
-        const blob = await pdf(<PDFFile name={name} />).toBlob();
+
+        // Generate PDF after name is available
+        const blob = await pdf(<PDFFile name={data.name} />).toBlob();
         const url = URL.createObjectURL(blob);
         window.open(url, '_blank');
       } else {
@@ -42,7 +45,7 @@ function App() {
         </form>
       </main>
     </div>
-  )
+  );
 }
 
 export default App;
